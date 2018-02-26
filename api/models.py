@@ -18,10 +18,14 @@ class Lesson(models.Model):
     on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
-    lesson_to_student = models.ManyToManyField('auth.User')
     student_threshold = models.PositiveIntegerField(default=1) # the maximum students in the lesson
     length_in_minutes = models.PositiveIntegerField(blank=False,default=30) # length of the lesson in minutes
-
+    seat_cost = MoneyField(
+        decimal_places=2,
+        default=0,
+        default_currency='JPY',
+        max_digits=13,
+    )
     def __str__(self):
         """Return a human readable representation of the model instance."""
         return "{}".format(self.name)
@@ -31,10 +35,9 @@ class TimeSlotStatus(models.Model):
 
 class TimeSlot(models.Model):
     """The time slots for the lesson"""
-    lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE,related_name='lesson')
     start = models.DateTimeField(blank=False)
     status = models.ForeignKey(TimeSlotStatus,on_delete=models.CASCADE)
-
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True,on_delete=models.CASCADE)
