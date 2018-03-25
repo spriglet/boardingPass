@@ -1,0 +1,11 @@
+{
+  "name": "boarding-pass-frontend",
+  "version": "1.0.0",
+  "description": "This is the front-end code for the boardingPass application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Micah Bell",
+  "license": "ISC"
+}
