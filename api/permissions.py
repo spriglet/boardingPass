@@ -2,6 +2,7 @@ from rest_framework.permissions import BasePermission
 from .models import Lesson
 
 
+
 class IsOwner(BasePermission):
     """Custom permission class to allow only lesson owners to edit them."""
 

@@ -54,7 +54,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True,on_delete=models.CASCADE)
     company = models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length=50,blank=False,default='USA')
-    currency = models.CharField(max_length=31,blank=False,default=c'JPY')
+    currency = models.CharField(max_length=31,blank=False,default='JPY')
     isSensei = models.BooleanField(default=False)
     timeZone = models.CharField(max_length=31,default='UTC')
 

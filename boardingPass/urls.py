@@ -15,8 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf.urls import url, include
+from .views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
-urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^', include('api.urls')) ,
+api_urlpatterns = [
+
+
+    url('accounts/', include('rest_registration.api.urls')),
 ]
+urlpatterns = [
+
+
+    url(r'^admin/', admin.site.urls),
+    url(r'^/', include('rest_auth.urls')),
+    url('api/v1/', include(api_urlpatterns)),
+    url('login/',LoginView.as_view()),
+    url(r'^$',IndexView.as_view(),name='home')
+
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

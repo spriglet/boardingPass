@@ -6,6 +6,7 @@ from .permissions import IsOwner
 from .models import *
 from rest_framework import permissions
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 
 class CreateLessonView(generics.ListCreateAPIView):
@@ -78,4 +79,5 @@ class SenseiView(generics.ListAPIView):
     """View to see the avilable teachers"""
     queryset = UserProfile.objects.filter(isSensei=True)
     serializer_class = SenseiSerializer
+
 

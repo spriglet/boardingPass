@@ -2,13 +2,17 @@
 
 from django.conf.urls import url, include
 from rest_framework.urlpatterns import format_suffix_patterns
+from django.views.generic.base import TemplateView
 from .views import *
+
 from rest_framework.authtoken.views import obtain_auth_token # add this import
 
 
 urlpatterns = {
+    url('accounts/', include('rest_registration.api.urls')),
     url(r'^auth/', include('rest_framework.urls',  # ADD THIS URL
                            namespace='rest_framework')),
+
     url(r'^lesson/$', CreateLessonView.as_view(), name="create_lesson"),
     url(r'^timeslot/$', CreateTimeSlotView.as_view(), name="create"),
     url(r'^seat/$', SeatView.as_view(), name="create"),
@@ -19,7 +23,8 @@ urlpatterns = {
     url(r'^users/$', UserView.as_view(), name="users"),
     url(r'^sensei/$', SenseiView.as_view(), name="sensei"),
     url(r'users/(?P<pk>[0-9]+)/$',UserLessonView.as_view(), name="user_details"),
-    url(r'^get-token/', obtain_auth_token), # Add this line
+
+
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)
