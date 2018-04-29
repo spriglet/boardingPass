@@ -1,0 +1,1 @@
+web: gunicorn boarding-pass.wsgi --log-file -
