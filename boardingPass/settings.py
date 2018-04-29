@@ -171,7 +171,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_URL = '/static/'
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+
 
 
 # Configure the JWTs to expire after 1 hour, and allow users to refresh near-expiration tokens
@@ -196,3 +196,5 @@ REST_USE_JWT = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 SITE_ID = 1
+
+django_heroku.settings(locals())
