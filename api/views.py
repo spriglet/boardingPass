@@ -30,6 +30,7 @@ class CreateTimeSlotView(generics.ListCreateAPIView):
 
 
 
+
 class SeatView(generics.ListCreateAPIView):
     """Creates a seat in the lesson/class"""
     queryset = Seat.objects.all()
@@ -38,9 +39,11 @@ class SeatView(generics.ListCreateAPIView):
         """Save the post data when creating a lesson."""
         serializer.save(student=self.request.user)  # Add owner=self.request.user
 
+
 class CreateTransaction(generics.CreateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = TransactionSerializer
+
 
 class LessonView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
@@ -50,6 +53,20 @@ class LessonView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (
         permissions.IsAuthenticated,
         IsOwner)
+
+
+class SenseiLessonView(generics.ListAPIView):
+    """This class handles the http GET, PUT and DELETE requests."""
+
+    serializer_class = LessonSerializer
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+
+        sensei = self.kwargs['sensei']
+        return Lesson.objects.filter(sensei=sensei)
 
 
 class TimeSlotView(generics.RetrieveUpdateDestroyAPIView):
@@ -62,6 +79,7 @@ class TransactionView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles GET,PUT and DELETE request for transactions"""
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+
 
 class UserView(generics.ListAPIView):
     """View to list the user queryset."""
@@ -81,3 +99,14 @@ class SenseiView(generics.ListAPIView):
     serializer_class = SenseiSerializer
 
 
+class SenseiViewProfileData(generics.ListAPIView):
+    """View to see the avilable teachers"""
+    serializer_class = SenseiSerializer
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+
+        user = self.kwargs['user']
+        return UserProfile.objects.filter(user=user)

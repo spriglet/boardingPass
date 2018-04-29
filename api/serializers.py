@@ -14,8 +14,10 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = Lesson
-        fields = ('id', 'sensei','name','description', 'date_created', 'date_modified','seat_cost')
+        fields = ('id', 'sensei','name','description', 'date_created', 'date_modified','seat_cost','student_threshold')
         read_only_fields = ('date_created', 'date_modified','cost_amount_currency')
+
+
 
 
 class TimeSlotStatusSerializer(serializers.ModelSerializer):
@@ -67,4 +69,4 @@ class SenseiSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('user', 'country')
+        fields = ('id','user', 'country','image_url','description')

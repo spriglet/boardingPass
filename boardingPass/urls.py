@@ -31,6 +31,11 @@ urlpatterns = [
     url(r'^/', include('rest_auth.urls')),
     url('api/v1/', include(api_urlpatterns)),
     url('login/',LoginView.as_view()),
-    url(r'^$',IndexView.as_view(),name='home')
+    url('scheduler/',SchedulerView.as_view()),
+    url('createclass/',CreateClassView.as_view()),
+    url('sensei/profile/',SenseiProfileView.as_view()),
+    url('list/',SenseiListView.as_view()),
+    url(r'^$',IndexView.as_view(),name='home'),
+    url(r'^rest/', include('api.urls'))
 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

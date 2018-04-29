@@ -12,8 +12,8 @@ urlpatterns = {
     url('accounts/', include('rest_registration.api.urls')),
     url(r'^auth/', include('rest_framework.urls',  # ADD THIS URL
                            namespace='rest_framework')),
-
     url(r'^lesson/$', CreateLessonView.as_view(), name="create_lesson"),
+    url(r'^sensei/lessons/(?P<sensei>.+)/$', SenseiLessonView.as_view(), name="sensei_lesson"),
     url(r'^timeslot/$', CreateTimeSlotView.as_view(), name="create"),
     url(r'^seat/$', SeatView.as_view(), name="create"),
     url(r'^lesson/(?P<pk>[0-9]+)/$',LessonView.as_view(), name="lesson"),
@@ -22,6 +22,7 @@ urlpatterns = {
     url(r'^transactions/(?P<pk>[0-9]+)/$',TransactionView.as_view(), name="transaction"),
     url(r'^users/$', UserView.as_view(), name="users"),
     url(r'^sensei/$', SenseiView.as_view(), name="sensei"),
+    url(r'^sensei/data/(?P<user>.+)/$', SenseiViewProfileData.as_view(), name="sensei_profile_data"),
     url(r'users/(?P<pk>[0-9]+)/$',UserLessonView.as_view(), name="user_details"),
 
 

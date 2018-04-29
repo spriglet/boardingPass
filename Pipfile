@@ -1,0 +1,44 @@
+[[source]]
+url = "https://boardingpass"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+
+[packages]
+django = "*"
+gunicorn = "*"
+django-heroku = "*"
+requests = "*"
+asn1crypto = "*"
+certifi = "*"
+cffi = "*"
+chardet = "*"
+cryptography = "*"
+defusedxml = "*"
+django-allauth = "*"
+django-extensions = "*"
+django-money = "*"
+django-rest-auth = "*"
+django-rest-registration = "*"
+django-sslserver = "*"
+djangorestframework = "*"
+djangorestframework-jwt = "*"
+idna = "*"
+oauthlib = "*"
+pkg-resources = "*"
+psycopg2 = "*"
+py-moneyed = "*"
+pycparser = "*"
+PyJWT = "*"
+pyOpenSSL = "*"
+python3-openid = "*"
+pytz = "*"
+requests = "*"
+requests-oauthlib = "*"
+six = "*"
+urllib3 = "*"
+Werkzeug = "*"
+
+[requires]
+python_version = "3.6"

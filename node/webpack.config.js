@@ -13,6 +13,7 @@ module.exports = {
         filename: 'bundle.js'
     },
     cache: false,
+    mode:'development',
     devtool: 'cheap-module-source-map',
     plugins: [
         new webpack.DefinePlugin({

@@ -11,3 +11,20 @@ class IndexView(TemplateView):
 class LoginView(TemplateView):
 
     template_name = 'login.html'
+
+
+class SchedulerView(TemplateView):
+
+    template_name = 'scheduler.html'
+
+class SenseiListView(TemplateView):
+
+    template_name = 'list.html'
+
+class SenseiProfileView(TemplateView):
+
+    template_name = 'senseiProfile.html'
+
+class CreateClassView(TemplateView):
+
+    template_name = 'createclass.html'
