@@ -1,1 +1,1 @@
-web: gunicorn boarding-pass.wsgi --log-file -
+web: gunicorn boardingPass.wsgi --log-file -
