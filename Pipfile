@@ -6,8 +6,11 @@ name = "pypi"
 [dev-packages]
 
 [packages]
+dj-database-url = "*"
+django = "*"
+gunicorn = "*"
+whitenoise = "*"
 pytz = "==2017.3"
-Django = "==2.0.2"
 asn1crypto = "==0.24.0"
 certifi = "==2018.1.18"
 cffi = "==1.11.5"
