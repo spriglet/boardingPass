@@ -6,7 +6,6 @@ name = "pypi"
 [dev-packages]
 
 [packages]
-pkg-resources = "==0.0.0"
 pytz = "==2017.3"
 Django = "==2.0.2"
 
