@@ -23,7 +23,11 @@ $(function() {
         page.render('sensei_list');
         return false;
     })
+     $('#edit_profile').click(function(e){
 
+        page.render('edit_profile');
+        return false;
+    })
     //
 /*
 http.GET('/scheduler/',function(html){

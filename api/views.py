@@ -11,11 +11,9 @@ from django.contrib.auth import authenticate, login
 
 class CreateLessonView(generics.ListCreateAPIView):
 
-
     """This class defines the create behavior of our rest api."""
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
-    permission_classes = (permissions.IsAuthenticated,IsOwner)  # ADD THIS LINE
 
     def perform_create(self, serializer):
         """Save the post data when creating a lesson."""
@@ -23,6 +21,8 @@ class CreateLessonView(generics.ListCreateAPIView):
 
 
 class CreateTimeSlotView(generics.ListCreateAPIView):
+    #permission_classes = (permissions.IsAuthenticated,IsOwner)  # ADD THIS LINE
+
     """This class defines the create behavior of our rest api."""
     queryset = TimeSlot.objects.all()
     serializer_class = TimeSlotSerializer
@@ -67,6 +67,19 @@ class SenseiLessonView(generics.ListAPIView):
 
         sensei = self.kwargs['sensei']
         return Lesson.objects.filter(sensei=sensei)
+
+class MyLessonsView(generics.ListAPIView):
+    """This class handles the http GET, PUT and DELETE requests."""
+
+    serializer_class = LessonSerializer
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+
+        return Lesson.objects.filter(sensei=self.request.user)
 
 
 class TimeSlotView(generics.RetrieveUpdateDestroyAPIView):

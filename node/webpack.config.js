@@ -9,7 +9,7 @@ module.exports = {
         main: ['./index.js']
     },
     output: {
-        path: __dirname + '/../static/assets/js',
+        path: __dirname + '/../staticfiles/assets/js',
         filename: 'bundle.js'
     },
     cache: false,

@@ -86,6 +86,8 @@ var http = new network.HTTP();
 var _ = __webpack_require__(/*! underscore */ "./node_modules/underscore/underscore.js");
 var templates = __webpack_require__(/*! ./htmlTemplates */ "./boardingPass/htmlTemplates.js");
 var pages = __webpack_require__(/*! ./pages */ "./boardingPass/pages.js");
+var date = __webpack_require__(/*! ../utils/date */ "./utils/date.js");
+var bpScheduler = __webpack_require__(/*! ./scheduler */ "./boardingPass/scheduler.js");
 
 var login = function login(response) {
 
@@ -134,8 +136,7 @@ var click_sensei_card = function click_sensei_card() {
                 $('#lessons').append(templates.lesson_card(index, sensei_id, row.name, row.description));
 
                 $('#lesson' + index).click(function () {
-
-                    pages.render('scheduler', scheduler_events);
+                    pages.render('scheduler', bpScheduler.scheduler_events);
                 });
             });
         });
@@ -147,19 +148,6 @@ var create_class = function create_class(response) {
     return false;
 };
 
-var scheduler_events = function scheduler_events() {
-
-    scheduler.init('scheduler_here', new Date(), "week");
-    scheduler.config.readonly = true;
-    var events = [{ id: 1, text: "Meeting", start_date: "04/11/2018 14:00", end_date: "04/11/2018 14:30" }, { id: 2, text: "Conference", start_date: "04/15/2018 12:00", end_date: "04/15/2018 12:30" }, { id: 3, text: "Interview", start_date: "04/24/2018 09:00", end_date: "04/24/2018 10:00" }];
-    scheduler.parse(events, "json"); //takes the name and format of the data source
-    scheduler.attachEvent("onClick", function (id, e) {
-        //any custom logic here
-        e.stopPropagation();
-        console.log(id);
-    });
-    return false;
-};
 var sign_up = function sign_up(response) {
     var detail = response;
     console.log(response);
@@ -308,110 +296,7 @@ module.exports.lesson_card = lesson_card;
 
 
 var events = __webpack_require__(/*! ./events */ "./boardingPass/events.js");
-
-var validation = {
-    username: {
-        rules: {
-            required: true,
-            minlength: 2
-        },
-        messages: {
-            required: "Please enter a username",
-            minlength: "Your username must consist of at least 2 characters"
-        }
-    },
-    first_name: {
-        rules: {
-            required: true,
-            minlength: 2
-        },
-        messages: {
-            required: "Please enter a username",
-            minlength: "Your username must consist of at least 2 characters"
-        }
-    },
-    last_name: {
-        rules: {
-            required: true,
-            minlength: 2
-        },
-        messages: {
-            required: "Please enter a username",
-            minlength: "Your username must consist of at least 2 characters"
-        }
-    },
-    password: {
-        rules: {
-            required: true,
-            minlength: 5
-        },
-        messages: {
-            required: "Please provide a password",
-            minlength: "Your password must be at least 5 characters long"
-        }
-    },
-    confirm_password: {
-        rules: {
-            required: true,
-            minlength: 5,
-            equalTo: "#signup_password"
-        },
-        messages: {
-            required: "Please provide a password",
-            minlength: "Your password must be at least 5 characters long",
-            equalTo: "Please enter the same password as above"
-        }
-    },
-    email: {
-        rules: {
-            required: true,
-            email: true
-        },
-        messages: {
-            required: "Please provide your email",
-            email: "Please enter a valid email address"
-        }
-    },
-    name: {
-        rules: {
-            required: true,
-            minlength: 2
-        },
-        messages: {
-            required: "Please enter a class name",
-            minlength: "Your class name must consist of at least 2 characters"
-        }
-    },
-    description: {
-        rules: {
-            required: true,
-            minlength: 2
-        },
-        messages: {
-            required: "Please enter a Description",
-            minlength: "Your description must be at least 2 characters"
-        }
-    }, seat_cost: {
-        rules: {
-            required: true,
-            number: true
-        },
-        messages: {
-            required: "Please enter a cost for the class",
-            number: "Please enter a valid number for cost"
-        }
-    }, student_threshold: {
-        rules: {
-            required: true,
-            number: true
-        },
-        messages: {
-            required: "Please enter a number for maximum students",
-            number: "Please enter a valid number"
-        }
-    }
-
-};
+var validation = __webpack_require__(/*! ./validationBindings */ "./boardingPass/validationBindings.js");
 var url = document.URL;
 
 var properties = {
@@ -504,6 +389,21 @@ var properties = {
 
         }]
 
+    }, edit_profile: {
+        binding: 'content',
+        templateUrl: '/profile/edit/',
+        content: [{
+            id: 'edit_profile',
+            isForm: true,
+            ajaxUrl: '/rest/edit/profile/',
+            mappings: { name: "name", description: "description", seat_cost: "seat_cost", student_threshold: "student_threshold" },
+            post: events.post_request,
+            response_handler: events.create_class,
+            rules: {},
+            messages: {}
+
+        }]
+
     }
 };
 
@@ -512,6 +412,161 @@ function create(pageName, events_handlers) {
 }
 
 module.exports.render = create;
+
+/***/ }),
+
+/***/ "./boardingPass/scheduler.js":
+/*!***********************************!*\
+  !*** ./boardingPass/scheduler.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var network = __webpack_require__(/*! ../utils/network */ "./utils/network.js");
+var databind = __webpack_require__(/*! ../utils/databind */ "./utils/databind.js");
+var http = new network.HTTP();
+var debug = true;
+var scheduler_events = function scheduler_events() {
+
+    $('#myModal').on('shown', function () {
+        $("#txtname").focus();
+    });
+    scheduler.config.api_date = "%Y-%m-%d %H:%i";
+    scheduler.init('scheduler_here', new Date(), "week");
+    // scheduler.config.readonly = true;
+
+    var events = [{ id: 1, text: "Meeting", start_date: "04/11/2018 14:00", end_date: "04/11/2018 14:30" }, { id: 2, text: "Conference", start_date: "04/15/2018 12:00", end_date: "04/15/2018 12:30" }, { id: 3, text: "Interview", start_date: "04/24/2018 09:00", end_date: "04/24/2018 10:00" }];
+    scheduler.parse(events, "json"); //takes the name and format of the data source
+    //default definition
+
+    scheduler.attachEvent("onClick", function (id, e) {
+        //any custom logic here
+        e.stopPropagation();
+        console.log(id);
+    });
+    http.GET('/rest/mylessons/', function (data) {
+        var select = $('#lesson_select');
+        databind.bindToSelect(select, data, 'id', 'name');
+
+        scheduler.attachEvent("onEmptyClick", function (date, e) {
+            //any custom logic her
+            $('#timeSlotModal').modal('show');
+        });
+    });
+
+    return false;
+};
+
+module.exports.scheduler_events = scheduler_events;
+
+/***/ }),
+
+/***/ "./boardingPass/validationBindings.js":
+/*!********************************************!*\
+  !*** ./boardingPass/validationBindings.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var text_rule = {
+    required: true,
+    minlength: 2
+};
+
+module.exports = {
+    username: {
+        rules: text_rule,
+        messages: {
+            required: "Please enter a username",
+            minlength: "Your username must consist of at least 2 characters"
+        }
+    },
+    first_name: {
+        rules: text_rule,
+        messages: {
+            required: "Please enter a username",
+            minlength: "Your username must consist of at least 2 characters"
+        }
+    },
+    last_name: {
+        rules: text_rule,
+        messages: {
+            required: "Please enter a username",
+            minlength: "Your username must consist of at least 2 characters"
+        }
+    },
+    password: {
+        rules: {
+            required: true,
+            minlength: 5
+        },
+        messages: {
+            required: "Please provide a password",
+            minlength: "Your password must be at least 5 characters long"
+        }
+    },
+    confirm_password: {
+        rules: {
+            required: true,
+            minlength: 5,
+            equalTo: "#signup_password"
+        },
+        messages: {
+            required: "Please provide a password",
+            minlength: "Your password must be at least 5 characters long",
+            equalTo: "Please enter the same password as above"
+        }
+    },
+    email: {
+        rules: {
+            required: true,
+            email: true
+        },
+        messages: {
+            required: "Please provide your email",
+            email: "Please enter a valid email address"
+        }
+    },
+    name: {
+        rules: text_rule,
+        messages: {
+            required: "Please enter a class name",
+            minlength: "Your class name must consist of at least 2 characters"
+        }
+    },
+    description: {
+        rules: text_rule,
+        messages: {
+            required: "Please enter a Description",
+            minlength: "Your description must be at least 2 characters"
+        }
+    }, seat_cost: {
+        rules: {
+            required: true,
+            number: true
+        },
+        messages: {
+            required: "Please enter a cost for the class",
+            number: "Please enter a valid number for cost"
+        }
+    }, student_threshold: {
+        rules: {
+            required: true,
+            number: true
+        },
+        messages: {
+            required: "Please enter a number for maximum students",
+            number: "Please enter a valid number"
+        }
+    }
+
+};
 
 /***/ }),
 
@@ -545,7 +600,11 @@ $(function () {
         page.render('sensei_list');
         return false;
     });
+    $('#edit_profile').click(function (e) {
 
+        page.render('edit_profile');
+        return false;
+    });
     //
     /*
     http.GET('/scheduler/',function(html){
@@ -2154,6 +2213,82 @@ try {
 
 module.exports = g;
 
+
+/***/ }),
+
+/***/ "./utils/databind.js":
+/*!***************************!*\
+  !*** ./utils/databind.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function createElement(type) {
+    /*
+            creates a dom element and converts it to a jquery object
+     */
+    var element = document.createElement(type); // Create a <button> element
+    return $(element);
+}
+
+function jsonToOptions(jsonArray, value, text) {
+    /* Creates a list of options from a json object */
+    return _.map(jsonArray, function (row) {
+        var option = createElement('option');
+        option.attr('value', row[value]);
+        option.text(row[text]);
+        return option;
+    });
+}
+
+function bindToSelect(selectObj, jsonArray, value, text) {
+
+    var options = jsonToOptions(jsonArray, value, text);
+    options.forEach(function (option) {
+        selectObj.append(option);
+    });
+}
+
+module.exports.createElement = createElement;
+module.exports.jsonToOptions = jsonToOptions;
+module.exports.bindToSelect = bindToSelect;
+
+/***/ }),
+
+/***/ "./utils/date.js":
+/*!***********************!*\
+  !*** ./utils/date.js ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function twoDigits(d) {
+    if (0 <= d && d < 10) return "0" + d.toString();
+    if (-10 < d && d < 0) return "-0" + (-1 * d).toString();
+    return d.toString();
+}
+
+Date.prototype.toMysqlFormat = function () {
+    return this.getUTCFullYear() + "-" + twoDigits(1 + this.getUTCMonth()) + "-" + twoDigits(this.getUTCDate());
+};
+
+function getDaysInMonth(month, year) {
+    var date = new Date(year, month, 1);
+    var days = [];
+    while (date.getMonth() === month) {
+        days.push(new Date(date));
+        date.setDate(date.getDate() + 1);
+    }
+    return days;
+}
+
+module.exports = Date;
 
 /***/ }),
 

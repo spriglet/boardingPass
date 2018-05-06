@@ -32,6 +32,7 @@ urlpatterns = [
     url('api/v1/', include(api_urlpatterns)),
     url('login/',LoginView.as_view()),
     url('scheduler/',SchedulerView.as_view()),
+    url('profile/edit', EditProfile.as_view()),
     url('createclass/',CreateClassView.as_view()),
     url('sensei/profile/',SenseiProfileView.as_view()),
     url('list/',SenseiListView.as_view()),

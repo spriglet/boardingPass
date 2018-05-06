@@ -33,6 +33,7 @@ input[type=submit]:hover {
     border-radius: 5px;
     background-color: #f2f2f2;
     padding: 20px;
+    align:center;
 }
 
 form label.error, form input.submit {
@@ -162,4 +163,15 @@ body {
     position: relative;
     margin-right: 0;
   }
+}
+.dhx_cal_event {
+		z-index: 1;
+		cursor: pointer;
+	}
+.highlighted_timespan {
+    background-color: #87cefa;
+    opacity:0.5;
+    filter:alpha(opacity=50);
+    cursor: pointer;
+    z-index: 0;
 }

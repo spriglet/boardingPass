@@ -3,7 +3,8 @@ var http = new network.HTTP();
 var _ = require('underscore');
 var templates = require('./htmlTemplates');
 var pages = require('./pages')
-
+var date = require('../utils/date')
+var bpScheduler = require('./scheduler');
 
 let login = function(response){
 
@@ -59,10 +60,7 @@ let click_sensei_card = function(){
                         $('#lessons').append(templates.lesson_card(index,sensei_id,row.name,row.description));
 
                         $('#lesson'+index).click(function(){
-
-
-
-                            pages.render('scheduler',scheduler_events);
+                            pages.render('scheduler',bpScheduler.scheduler_events);
 
                         })
                 })
@@ -76,26 +74,7 @@ let create_class = function(response){
     return false;
 }
 
-let scheduler_events = function(){
 
-
-        scheduler.init('scheduler_here', new Date(),"week");
-        scheduler.config.readonly = true;
-        var events = [
-        {id:1, text:"Meeting",   start_date:"04/11/2018 14:00",end_date:"04/11/2018 14:30"},
-        {id:2, text:"Conference",start_date:"04/15/2018 12:00",end_date:"04/15/2018 12:30"},
-        {id:3, text:"Interview", start_date:"04/24/2018 09:00",end_date:"04/24/2018 10:00"}
-        ];
-        scheduler.parse(events, "json");//takes the name and format of the data source
-        scheduler.attachEvent("onClick", function (id, e){
-            //any custom logic here
-            e.stopPropagation();
-            console.log(id);
-
-
-        });
-        return false;
-}
 let sign_up = function(response){
     var detail = response;
     console.log(response);

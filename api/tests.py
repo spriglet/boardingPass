@@ -209,3 +209,5 @@ class ViewTestCase(TestCase):
             follow=True)
 
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def can_update_profile(self):

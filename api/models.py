@@ -7,8 +7,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from django.db.models.signals import post_save
 from django.dispatch import receiver
-
 
 class Lesson(models.Model):
     """This class represents the bucketlist model."""
@@ -50,6 +50,7 @@ class TimeSlot(models.Model):
         """Return a human readable representation of the model instance."""
         return "{}".format(self.lesson)
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE)
     company = models.CharField(max_length=50, blank=True)
@@ -58,6 +59,16 @@ class UserProfile(models.Model):
     isSensei = models.BooleanField(default=False)
     image_url = models.CharField(max_length=500, blank=True)
     description = models.CharField(max_length=2000, blank=True)
+
+
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+
 
 class SeatStatus(models.Model):
     name = models.CharField(max_length=31,blank=False)

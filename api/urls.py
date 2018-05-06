@@ -12,6 +12,7 @@ urlpatterns = {
     url('accounts/', include('rest_registration.api.urls')),
     url(r'^auth/', include('rest_framework.urls',  # ADD THIS URL
                            namespace='rest_framework')),
+    url(r'^mylessons/$', MyLessonsView.as_view(), name="my_lessons"),
     url(r'^lesson/$', CreateLessonView.as_view(), name="create_lesson"),
     url(r'^sensei/lessons/(?P<sensei>.+)/$', SenseiLessonView.as_view(), name="sensei_lesson"),
     url(r'^timeslot/$', CreateTimeSlotView.as_view(), name="create"),
